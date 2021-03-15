@@ -1,0 +1,59 @@
+Change the default networking mode of VM from NAT to Bridge to have more interaction between host machine and VM.
+In bridged networking mode, the default gateway of VM is home router.
+So, after start, VM will get the IP address in the same network range.
+┌──$ [~/42/2021/boot2root]
+└─>  VBoxManage modifyvm "boot2root" --nic1 bridged
+
+Run the VM.
+┌──$ [~/42/2021/boot2root]
+└─>  VBoxManage startvm "boot2root" --type headless
+Waiting for VM "boot2root" to power on...
+VM "boot2root" has been successfully started.
+
+Find the subnet address and the mask on which actuall device is running.
+┌──$ [~/42/2021/boot2root]
+└─>  ifconfig en0
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	ether 4c:32:75:9a:8f:4f
+	inet6 fe80::1494:c6e:2676:7fc3%en0 prefixlen 64 secured scopeid 0x4
+	inet 192.168.1.95 netmask 0xffffff00 broadcast 192.168.1.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+
+0xffffff00 -> 255.255.255.0
+192.168.1.95 & 255.255.255.0 = 192.168.1.0/24
+
+┌──$ [~/42/2021/boot2root]
+└─>  sudo nmap -sn 192.168.1.0/24
+Password: ******************
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-03-15 10:09 CET
+Nmap scan report for 192.168.1.1
+Host is up (0.0040s latency).
+MAC Address: 00:00:00:00:00:00 (Router)
+[...]
+Nmap scan report for 192.168.1.65                               # boot2root IP Address
+Host is up (0.087s latency).                                    # boot2root VM
+MAC Address: 08:00:27:54:2D:B5 (Oracle VirtualBox virtual NIC)  # boot2root MAC Address
+Nmap scan report for 192.168.1.95
+Host is up.
+Nmap done: 256 IP addresses (5 hosts up) scanned in 2.55 seconds
+
+
+Knowing IP address of boot2root VM analyse it.
+┌──$ [~/42/2021/boot2root]
+└─>  sudo nmap 192.168.1.96
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-03-15 10:41 CET
+Nmap scan report for 192.168.1.96
+Host is up (0.00023s latency).
+Not shown: 994 closed ports
+PORT    STATE SERVICE
+21/tcp  open  ftp
+22/tcp  open  ssh
+80/tcp  open  http
+143/tcp open  imap
+443/tcp open  https
+993/tcp open  imaps
+MAC Address: 08:00:27:54:2D:B5 (Oracle VirtualBox virtual NIC)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.12 seconds
