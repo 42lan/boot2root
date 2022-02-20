@@ -1,51 +1,112 @@
+# Explore ISO file
+Start explore ISO file before installing a VM.
+```sh
+┌──$ [~]
+└─>  cd /Volumes/BornToSec
+┌──$ [/Volumes/BornToSec]
+└─>  tree -a
+.
+├── .disk
+│   ├── base_installable
+│   ├── cd_type
+│   ├── info
+│   └── release_notes_url
+├── README.diskdefines
+├── casper
+│   ├── README.diskdefines
+│   ├── filesystem.manifest
+│   ├── filesystem.manifest-desktop
+│   ├── filesystem.size
+│   ├── filesystem.squashfs
+│   ├── initrd.gz
+│   └── vmlinuz
+├── install
+│   └── memtest
+├── isolinux
+│   ├── boot.cat
+│   ├── isolinux.bin
+│   ├── isolinux.cfg
+│   ├── splash.png
+│   └── vesamenu.c32
+├── md5sum.txt
+├── preseed
+│   └── custom.seed
+└── ubuntu
+
+5 directories, 21 files
+```
+
+
+
+
+
+
+
+
+
+
+
+
+# Install ISO
+
 Change the default networking mode of VM from NAT to Bridge to have more interaction between host machine and VM.
 In bridged networking mode, the default gateway of VM is home router.
 So, after start, VM will get the IP address in the same network range.
-┌──$ [~/42/2021/boot2root]
+```sh
+┌──$ [~/42/2022/boot2root]
 └─>  VBoxManage modifyvm "boot2root" --nic1 bridged
+```
 
 Run the VM.
-┌──$ [~/42/2021/boot2root]
+```sh
+┌──$ [~/42/2022/boot2root]
 └─>  VBoxManage startvm "boot2root" --type headless
 Waiting for VM "boot2root" to power on...
 VM "boot2root" has been successfully started.
+```
 
 Find the subnet address and the mask on which actuall device is running.
-┌──$ [~/42/2021/boot2root]
+```sh
+┌──$ [~/42/2022/boot2root]
 └─>  ifconfig en0
 en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 	ether 4c:32:75:9a:8f:4f
-	inet6 fe80::1494:c6e:2676:7fc3%en0 prefixlen 64 secured scopeid 0x4
-	inet 192.168.1.95 netmask 0xffffff00 broadcast 192.168.1.255
+	inet6 fe80::c8e:b7dd:85d9:5032%en0 prefixlen 64 secured scopeid 0x7
+	inet 192.168.0.13 netmask 0xffffff00 broadcast 192.168.0.255
 	nd6 options=201<PERFORMNUD,DAD>
 	media: autoselect
 	status: active
+```
 
+```
 0xffffff00 -> 255.255.255.0
-192.168.1.95 & 255.255.255.0 = 192.168.1.0/24
+192.168.0.13 & 255.255.255.0 = 192.168.0.0/24
+```
 
-┌──$ [~/42/2021/boot2root]
-└─>  sudo nmap -sn 192.168.1.0/24
+```sh
+┌──$ [~/42/2022/boot2root]
+└─>  sudo nmap -sn 192.168.0.0/24
 Password: ******************
-Starting Nmap 7.91 ( https://nmap.org ) at 2021-03-15 10:09 CET
-Nmap scan report for 192.168.1.1
-Host is up (0.0040s latency).
-MAC Address: 00:00:00:00:00:00 (Router)
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-18 17:44 CET
 [...]
-Nmap scan report for 192.168.1.65                               # boot2root IP Address
-Host is up (0.087s latency).                                    # boot2root VM
-MAC Address: 08:00:27:54:2D:B5 (Oracle VirtualBox virtual NIC)  # boot2root MAC Address
-Nmap scan report for 192.168.1.95
-Host is up.
-Nmap done: 256 IP addresses (5 hosts up) scanned in 2.55 seconds
+Nmap scan report for 192.168.0.28                              # boot2root IP address
+Host is up (0.00035s latency).                                 # boot2root VM status
+MAC Address: 08:00:27:AC:88:E4 (Oracle VirtualBox virtual NIC) # boot2root MAC address
+-
+Nmap scan report for 192.168.0.13                              # my host
+Host is up.                                                    # my host status
+Nmap done: 256 IP addresses (6 hosts up) scanned in 23.57 seconds
+```
 
 
-Knowing IP address of boot2root VM analyse it.
-┌──$ [~/42/2021/boot2root]
-└─>  sudo nmap 192.168.1.96
-Starting Nmap 7.91 ( https://nmap.org ) at 2021-03-15 10:41 CET
-Nmap scan report for 192.168.1.96
-Host is up (0.00023s latency).
+By finding the IP address of boot2root VM scan it by runnig default `nmap` command with `-O` option to enable OS detection
+```sh
+┌──$ [~/42/2022/boot2root]
+└─>  sudo nmap -O 192.168.0.28
+Password: ******************
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-20 20:18 CET
+Nmap scan report for 192.168.0.28
+Host is up (0.00041s latency).
 Not shown: 994 closed ports
 PORT    STATE SERVICE
 21/tcp  open  ftp
@@ -54,6 +115,25 @@ PORT    STATE SERVICE
 143/tcp open  imap
 443/tcp open  https
 993/tcp open  imaps
-MAC Address: 08:00:27:54:2D:B5 (Oracle VirtualBox virtual NIC)
+MAC Address: 08:00:27:AC:88:E4 (Oracle VirtualBox virtual NIC)
+Device type: general purpose
+Running: Linux 3.X
+OS CPE: cpe:/o:linux:linux_kernel:3
+OS details: Linux 3.2 - 3.10, Linux 3.2 - 3.16
+Network Distance: 1 hop
 
-Nmap done: 1 IP address (1 host up) scanned in 0.12 seconds
+OS detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 1.81 seconds
+```
+The scan reveals that a few serices are running and their corresponding ports.
+
+Website on port `80` has title "Hack me if you can". Source code doesn't reveal anything interesting.
+
+Trying access random page, show taht server is running on Apache/2.2.22
+```
+http://192.168.0.28/admin
+Not Found
+
+The requested URL /admin was not found on this server.
+Apache/2.2.22 (Ubuntu) Server at 192.168.0.28 Port 80
+```
