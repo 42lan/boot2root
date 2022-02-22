@@ -1,7 +1,14 @@
 # Explore ISO file
+Mount ISO file
+```sh
+┌──$ [~/42/2022/boot2root]
+└─>  hdiutil mount BornToSecHackMe-v1.1.iso
+/dev/disk2               /Volumes/BornToSec
+```
+
 Start explore ISO file before installing a VM.
 ```sh
-┌──$ [~]
+┌──$ [~/42/2022/boot2root]
 └─>  cd /Volumes/BornToSec
 ┌──$ [/Volumes/BornToSec]
 └─>  tree -a
@@ -11,31 +18,30 @@ Start explore ISO file before installing a VM.
 │   ├── cd_type
 │   ├── info
 │   └── release_notes_url
-├── README.diskdefines
+├── README.diskdefines              # file which may be referenced during installation
 ├── casper
-│   ├── README.diskdefines
-│   ├── filesystem.manifest
-│   ├── filesystem.manifest-desktop
-│   ├── filesystem.size
-│   ├── filesystem.squashfs
-│   ├── initrd.gz
-│   └── vmlinuz
+│   ├── README.diskdefines          # file which may be referenced during installation
+│   ├── filesystem.manifest         # file which contains information about the installation packages
+│   ├── filesystem.manifest-desktop # file which contains information about the installation packages
+│   ├── filesystem.size             # the required disk space for OS is usually twice the amount of bytes found in this file
+│   ├── filesystem.squashfs         # read-only file system which is especially used to create Live CD
+│   ├── initrd.gz                   # Gzip compressed data which provides the capability to load a RAM disk by the boot loader
+│   └── vmlinuz                     # Linux kernel x86 boot executable
 ├── install
 │   └── memtest
-├── isolinux
-│   ├── boot.cat
-│   ├── isolinux.bin
-│   ├── isolinux.cfg
-│   ├── splash.png
-│   └── vesamenu.c32
-├── md5sum.txt
+├── isolinux                        # the folder containing the loader isolinux.bin. It will search for the config file directory in the order /boot/isolinux, /isolinux, /
+│   ├── boot.cat                    # file which is of no interest except it is required
+│   ├── isolinux.bin                # a boot loader for ISO9660 (file system for CD-ROM disks)
+│   ├── isolinux.cfg                # configuration file which contains directives settings for the color and the structure of the menu
+│   ├── splash.png                  # screen image shown at boot
+│   └── vesamenu.c32                # the program which displays the boot menu
+├── md5sum.txt                      # fingerprint (checksum) of disk files
 ├── preseed
 │   └── custom.seed
 └── ubuntu
 
 5 directories, 21 files
 ```
-
 
 
 
