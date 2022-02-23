@@ -19,7 +19,7 @@ Start explore ISO file before installing a VM.
 │   ├── info
 │   └── release_notes_url
 ├── README.diskdefines              # file which may be referenced during installation
-├── casper
+├── casper                          # folder containing the read-only part of the file system
 │   ├── README.diskdefines          # file which may be referenced during installation
 │   ├── filesystem.manifest         # file which contains information about the installation packages
 │   ├── filesystem.manifest-desktop # file which contains information about the installation packages
@@ -36,8 +36,8 @@ Start explore ISO file before installing a VM.
 │   ├── splash.png                  # screen image shown at boot
 │   └── vesamenu.c32                # the program which displays the boot menu
 ├── md5sum.txt                      # fingerprint (checksum) of disk files
-├── preseed
-│   └── custom.seed
+├── preseed                         # preseed allows to automate an installer by pre-specifying answers to installation questions
+│   └── custom.seed                 # preconfiguration file
 └── ubuntu
 
 5 directories, 21 files
