@@ -218,3 +218,38 @@ The forum on https://192.168.0.21:443/forum/, is claming in the title *HackMe*.
 
 First, there is no way to create a new user, only to log in with existing one: `admin`, `lmezard`, `qudevide`, `thor`, `wandre` and `zaz`.
 
+A post (Probleme login ?)[https://192.168.0.21/forum/index.php?id=6] contains extract of `auth.log` file. `/var/log/auth.log` keeps authentication logs for successful or failed logins, and authentication processes.
+
+Copy this log into a file and sort by users which tried to authentificate.
+```shell
+┌──$ [/tmp]
+└─>  cat auth.log |  grep -o "user .* from" | sort -u
+user !q\]Ej?*5K5cy*AJ from
+user PlcmSpIp from
+user adam from
+user adm from
+user admin from
+user ftpuser from
+user guest from
+user nagios from
+user naos from
+user nvdb from
+user pi from
+user support from
+user test from
+user ubnt from
+user user from
+```
+Only three users were succesefuly authenticated.
+```shell
+┌──$ [/tmp]
+└─>  cat auth.log |  grep -o "session opened for user .*"  | sort -u
+session opened for user admin by (uid=0)
+session opened for user lmezard by (uid=1040)
+session opened for user root by (uid=0)
+session opened for user root by admin(uid=0)
+session opened for user root by admin(uid=1000)
+```
+It seems clearly that user which tried to authentificate misstyped password instead of username `!q\]Ej?*5K5cy*AJ`. As succesefuly authenticated users are determined, try to log in forum under of one of those users.
+
+The password allowed to authentificate on the forum as `lmezard` user.
