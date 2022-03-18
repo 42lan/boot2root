@@ -218,7 +218,7 @@ The forum on https://192.168.0.21:443/forum/, is claming in the title *HackMe*.
 
 First, there is no way to create a new user, only to log in with existing one: `admin`, `lmezard`, `qudevide`, `thor`, `wandre` and `zaz`.
 
-A post (Probleme login ?)[https://192.168.0.21/forum/index.php?id=6] contains extract of `auth.log` file. `/var/log/auth.log` keeps authentication logs for successful or failed logins, and authentication processes.
+A post [Probleme login ?](https://192.168.0.21/forum/index.php?id=6) contains extract of `auth.log` file. `/var/log/auth.log` keeps authentication logs for successful or failed logins, and authentication processes.
 
 Copy this log into a file and sort by users which tried to authentificate.
 ```shell
@@ -252,4 +252,4 @@ session opened for user root by admin(uid=1000)
 ```
 It seems clearly that user which tried to authentificate misstyped password instead of username `!q\]Ej?*5K5cy*AJ`. As succesefuly authenticated users are determined, try to log in forum under of one of those users.
 
-The password allowed to authentificate on the (forum)[https://192.168.0.21/forum] as `lmezard` user, but not on (webmail)[https://192.168.0.21/webmail] and (phpmyadmin)[https://192.168.0.21/phpmyadmin/].
+The password allowed to authentificate on the [forum](https://192.168.0.21/forum) as `lmezard` user, but not on [webmail](https://192.168.0.21/webmail) and [phpmyadmin](https://192.168.0.21/phpmyadmin/).
