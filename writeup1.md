@@ -253,3 +253,9 @@ session opened for user root by admin(uid=1000)
 It seems clearly that user which tried to authentificate misstyped password instead of username `!q\]Ej?*5K5cy*AJ`. As succesefuly authenticated users are determined, try to log in forum under of one of those users.
 
 The password allowed to authentificate on the [forum](https://192.168.0.21/forum) as `lmezard` user, but not on [webmail](https://192.168.0.21/webmail) and [phpmyadmin](https://192.168.0.21/phpmyadmin/).
+
+On [Edit Profile](https://192.168.0.21/forum/index.php?mode=user&action=edit_profile) page the email of profile is `laurie@borntosec.net`.
+
+Using the initial password `!q\]Ej?*5K5cy*AJ` and the `laurie@borntosec.net` allow to connect [webmail](https://192.168.0.21/webmail).
+
+An email from `qudevide@mail.borntosec.net` contains credentials `root/Fg-'kKXBj87E:aJ$` to access DB [phpmyadmin](https://192.168.0.21/phpmyadmin/).
