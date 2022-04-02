@@ -46,6 +46,22 @@ fun: POSIX tar archive (GNU)
 ```
 
 ## ssh laurie
+Login in with `laurie:330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4`.
+```
+laurie@BornToSecHackMe:~$ cat README
+Diffuse this bomb!
+When you have all the password use it as "thor" user with ssh.
+
+HINT:
+P
+ 2
+ b
+
+o
+4
+
+NO SPACE IN THE PASSWORD (password is case sensitive).
+```
 
 ## ssh thor
 
