@@ -85,16 +85,21 @@ Good work!  On to the next...
 4 2 6 3 1 5
 Congratulations! You've defused the bomb!
 ```
-Now we have the password for thor `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. According to a Slack thread, these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
+Now we have the password for thor `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. According to a [stackoverflow thread](https://stackoverflow.com/c/42network/questions/664), these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
 
 ## ssh thor
 Login with `thor:Publicspeakingisveryeasy.126241207201b2149opekmq426135`
+
 ```
 thor@BornToSecHackMe:~$ cat README
 Finish this challenge and use the result as password for 'zaz' user.
 ```
 
-The filename itself is a hint. We need to play with a Python lib called [turtle](https://docs.python.org/3/library/turtle.html).
+```
+$ md5 -s SLASH
+MD5 ("SLASH") = 646da671ca01bb5d84dbb5fb2238dc8e
+```
+The filename itself is a hint. We need to play with a Python lib called [turtle](https://docs.python.org/3/library/turtle.html). We got the string `SLASH`. The password is MD5 hash of `SLASH`.
 
 ## ssh zaz
 
