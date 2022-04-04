@@ -105,6 +105,7 @@ Host is up.                                                    # my host status
 Nmap done: 256 IP addresses (6 hosts up) scanned in 23.57 seconds
 ```
 
+# Nmap - discover open ports
 
 Once IP address is found, run a scan with  `-p-`, `-sV` and `-O` options to scan ports from 1 through 65535, enable service/version detection to determine what application is running and enable OS detection. Aggressive scan may be performed using option `-A`.
 ```sh
@@ -135,21 +136,12 @@ Nmap done: 1 IP address (1 host up) scanned in 21.01 seconds
 ```
 The scan reveals that a few serices are running and their corresponding ports.
 
-Website on port `80` has title "Hack me if you can". Source code doesn't reveal anything interesting.
+# Dirb - path traversal
+A [path traversal attack](https://owasp.org/www-community/attacks/Path_Traversal) can be performed on HTTP and HTTPS ports using **dirb**.
 
-Trying access random page, show taht server is running on Apache/2.2.22
-```
-http://192.168.0.21/admin
-Not Found
+[**dirb**](https://www.kali.org/tools/dirb/) is a web content scanner which will looks for existing web objects. It basically works by launching a dictionary based attack.
 
-The requested URL /admin was not found on this server.
-Apache/2.2.22 (Ubuntu) Server at 192.168.0.21 Port 80
-```
-
-Instead of manual/random tries to find a valid webpage, a [path traversal attack](https://owasp.org/www-community/attacks/Path_Traversal) can be performed.
-`dirb` is a web content scanner which will looks for existing web objects. It basically works by launching a dictionary based attack.
-
-Run `dirb` on port 80 reveal that only `index.html` and `fonts/` are accessible.
+Run **dirb** on port 80 reveal that only `index.html` and `fonts/` are accessible.
 ```shell
 ┌──(kali㉿kali)-[~]
 └─$ dirb http://192.168.0.21
@@ -214,6 +206,7 @@ END_TIME: Tue Mar 15 10:36:13 2022
 DOWNLOADED: 4612 - FOUND: 2
 ```
 
+# Explore the forum
 The forum on https://192.168.0.21:443/forum/, is claming in the title *HackMe*.
 
 First, there is no way to create a new user, only to log in with existing one: `admin`, `lmezard`, `qudevide`, `thor`, `wandre` and `zaz`.
@@ -256,11 +249,14 @@ The password allowed to authentificate on the [forum](https://192.168.0.21/forum
 
 On [Edit Profile](https://192.168.0.21/forum/index.php?mode=user&action=edit_profile) page the email of profile is `laurie@borntosec.net`.
 
+# Webmail
 Using the initial password `!q\]Ej?*5K5cy*AJ` and the `laurie@borntosec.net` allow to connect [webmail](https://192.168.0.21/webmail).
 
 An email from `qudevide@mail.borntosec.net` contains credentials `root/Fg-'kKXBj87E:aJ$` to access DB [phpmyadmin](https://192.168.0.21/phpmyadmin/).
 
-Once logedd into [phpmyadmin](https://192.168.0.21/phpmyadmin/) a [webshell](https://en.wikipedia.org/wiki/Web_shell) can be injected using `OUTFILE` statement. But it requires to find a writtable directory of Apache web server where the webshell can be put in. To do so, `dirb` can be runned on [https://192.168.0.21/forum](https://192.168.0.21/forum).
+# phpMyAdmin - injection of web shell
+
+Once logedd into [phpmyadmin](https://192.168.0.21/phpmyadmin/) a [webshell](https://en.wikipedia.org/wiki/Web_shell) can be injected using `OUTFILE` statement. But it requires to find a writtable directory of Apache web server where the webshell can be put in. To do so, **dirb** can be runned on [https://192.168.0.21/forum](https://192.168.0.21/forum).
 
 ```shell
 ┌──(kali㉿kali)-[~]
