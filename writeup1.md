@@ -108,7 +108,10 @@ Nmap done: 256 IP addresses (6 hosts up) scanned in 23.57 seconds
 # Nmap - discover open ports
 
 Once IP address is found, run a scan with  `-p-`, `-sV` and `-O` options to scan ports from 1 through 65535, enable service/version detection to determine what application is running and enable OS detection. Aggressive scan may be performed using option `-A`.
-```sh
+<details>
+<summary>Output of nmap</summary>
+
+```shell
 ┌──$ [~/42/2022/boot2root]
 └─>  sudo nmap -p- -sV -O 192.168.0.21
 Password: ******************
@@ -134,6 +137,10 @@ Service Info: Host: 127.0.1.1; OS: Linux; CPE: cpe:/o:linux:linux_kernel
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 21.01 seconds
 ```
+</details>
+
+
+
 The scan reveals that a few serices are running and their corresponding ports.
 
 # Dirb - path traversal
@@ -142,6 +149,9 @@ A [path traversal attack](https://owasp.org/www-community/attacks/Path_Traversal
 [**dirb**](https://www.kali.org/tools/dirb/) is a web content scanner which will looks for existing web objects. It basically works by launching a dictionary based attack.
 
 Run **dirb** on port 80 reveal that only `index.html` and `fonts/` are accessible.
+<details>
+<summary>Output of dirb</summary>
+
 ```shell
 ┌──(kali㉿kali)-[~]
 └─$ dirb http://192.168.0.21
@@ -174,8 +184,13 @@ GENERATED WORDS: 4612
 END_TIME: Tue Mar 15 10:28:13 2022
 DOWNLOADED: 4612 - FOUND: 4
 ```
+</details>
+
 
 Running same scan, with `-r` option, on HTTPS port 443, reveal `forum`, `phpmyadmin` and `webmail` accessible.
+<details>
+<summary>Output of dirb</summary>
+
 ```shell
 ┌──(kali㉿kali)-[~]
 └─$ dirb https://192.168.0.21:443 /usr/share/dirb/wordlists/common.txt -r
@@ -205,6 +220,8 @@ GENERATED WORDS: 4612
 END_TIME: Tue Mar 15 10:36:13 2022
 DOWNLOADED: 4612 - FOUND: 2
 ```
+</details>
+
 
 # Explore the forum
 The forum on https://192.168.0.21:443/forum/, is claming in the title *HackMe*.
@@ -257,6 +274,8 @@ An email from `qudevide@mail.borntosec.net` contains credentials `root/Fg-'kKXBj
 # phpMyAdmin - injection of web shell
 
 Once logedd into [phpmyadmin](https://192.168.0.21/phpmyadmin/) a [webshell](https://en.wikipedia.org/wiki/Web_shell) can be injected using `OUTFILE` statement. But it requires to find a writtable directory of Apache web server where the webshell can be put in. To do so, **dirb** can be runned on [https://192.168.0.21/forum](https://192.168.0.21/forum).
+<details>
+<summary>Output of dirb</summary>
 
 ```shell
 ┌──(kali㉿kali)-[~]
@@ -296,6 +315,8 @@ END_TIME: Mon Apr  4 10:20:30 2022
 DOWNLOADED: 4612 - FOUND: 4
 
 ```
+</details>
+
 
 `/var/www/` is the default installation directory for Apache2 and forum is located inside this directory. So, trying to execute following SQL query allow to write a file into `/var/www/forum/templates_c/`. 
 `templates_c` is a ...
