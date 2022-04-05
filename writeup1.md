@@ -407,3 +407,46 @@ Now SHA-256 it and submit
 └─$ echo -n Iheartpwnage | shasum -a256
 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
 ```
+
+# SSH laurie
+```shell
+┌──(kali㉿kali)-[~]
+└─$ ssh laurie@192.168.56.103
+The authenticity of host '192.168.56.103 (192.168.56.103)' can't be established.
+ECDSA key fingerprint is SHA256:d5T03f+nYmKY3NWZAinFBqIMEK1U0if222A1JeR8lYE.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '192.168.56.103' (ECDSA) to the list of known hosts.
+        ____                _______    _____           
+       |  _ \              |__   __|  / ____|          
+       | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
+       |  _ < / _ \| '__| '_ \| |/ _ \\___ \ / _ \/ __|
+       | |_) | (_) | |  | | | | | (_) |___) |  __/ (__ 
+       |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
+
+                       Good luck & Have fun
+laurie@192.168.56.103's password: 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
+laurie@BornToSecHackMe:~$ 
+```
+Once logged into laurie, two file are located in home directory.
+```shell
+laurie@BornToSecHackMe:~$ ls
+bomb  README
+laurie@BornToSecHackMe:~$ file *
+bomb:   ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.0.0, not stripped
+README: ASCII text
+laurie@BornToSecHackMe:~$ cat README 
+Diffuse this bomb!
+When you have all the password use it as "thor" user with ssh.
+
+HINT:
+P
+ 2
+ b
+
+o
+4
+
+NO SPACE IN THE PASSWORD (password is case sensitive).
+```
+```
