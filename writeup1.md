@@ -345,7 +345,7 @@ lmezard:G!@M6f4Eatau{sF"
 
 # FTP
 ```shell
-┌──(kali㉿kali)-[~]
+┌──(kali㉿kali)-[/tmp/b2r]
 └─$ ftp lmezard@192.168.56.101
 Connected to 192.168.56.101.
 220 Welcome on this server
@@ -372,5 +372,38 @@ Prompting off for duration of mget.
 100% |****************************************************************************************|   790 KiB   56.21 MiB/s    00:00 ETA
 226 Transfer complete.
 808960 bytes received in 00:00 (55.12 MiB/s)
+```
+Received files are an archive with a little challenge and a text file indicating that the password will allow to log as `laurie` in SSH.
+```shell
+┌──(kali㉿kali)-[/tmp/b2r]
+└─$ file *                    
+fun:    POSIX tar archive (GNU)
+README: ASCII text
+```
+Extract files from an archive
+```shell
+┌──(kali㉿kali)-[/tmp/b2r]
+└─$ tar -xf fun 
+┌──(kali㉿kali)-[/tmp/b2r]
+└─$ ls          
+ft_fun  fun  README
+┌──(kali㉿kali)-[/tmp/b2r]
+└─$ ls -l ft_fun
+total 3028
+-rw-r----- 1 kali kali    26 Aug 13  2015 00M73.pcap
+[...]
+-rw-r----- 1 kali kali    28 Aug 13  2015 ZQTK1.pcap
+```
+`.pcap` extension are false trail. Those files are simple ASCII text files containing C line instructions and C-style comments.
+The challenge here is to rebuild the program in C and get the password.
 
+For this purpose a shell sciprt `fun.sh` is created. It gets all files containing a string 'file' in it, itterates over them and rename them according to file number in the comment. Finally it concatenate those files into main.c, compile it and execute.
+```shell
+┌──(kali㉿kali)-[/tmp/b2r/ft_fun]
+└─$ ./fun.sh                           
+MY PASSWORD IS: Iheartpwnage
+Now SHA-256 it and submit
+┌──(kali㉿kali)-[/tmp/b2r/ft_fun]
+└─$ echo -n Iheartpwnage | shasum -a256
+330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
 ```
