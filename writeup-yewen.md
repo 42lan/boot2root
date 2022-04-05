@@ -124,6 +124,18 @@ For third phase, our input format must be `int char int`. According to the hint 
 
 ### Phase 4. Fibonacci
 
+```
+int func4(int n)
+{
+	int ret;
+
+	if (n <= 1)
+		return 1;
+	return func4(n - 2) + func4(n - 1);
+}
+```
+Fourth phase calls `func4` to take our input number N as index then compares Nth fibonacci number with `55`. Since index starts from 0, we input index `9` to get 55.
+
 ### Phase 5. Magic cipher
 
 ### Phase 6. Sorting numbers

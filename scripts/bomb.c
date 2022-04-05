@@ -16,12 +16,13 @@ void phase_2(char *str)
 		if (n[i] != (i + 1) * n[i - 1])
 			explode_bomb();
 /*
-	1 : 1
-	2 : 2 * 1 = 2
-	3 : 3 * 2 = 6
-	4 : 4 * 6 = 24
-	5 : 5 * 24 = 120
-	6 : 6 * 120 = 720
+	1! = 1
+	2! = 2 * 1 = 2
+	3! = 3 * 2 = 6
+	4! = 4 * 6 = 24
+	5! = 5 * 24 = 120
+	6! = 6 * 120 = 720
+
 */
 }
 
@@ -54,10 +55,8 @@ int func4(int n)
 	int ret;
 
 	if (n <= 1)
-		ret = 1;
-	else
-		ret = func4(n - 2) + func4(n - 1);
-	return ret;
+		return 1;
+	return func4(n - 2) + func4(n - 1);
 }
 
 void phase_4(char *str)
