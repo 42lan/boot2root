@@ -449,4 +449,23 @@ o
 
 NO SPACE IN THE PASSWORD (password is case sensitive).
 ```
+```shell
+laurie@BornToSecHackMe:~$ ./bomb
+Welcome this is my little bomb !!!! You have 6 stages with
+only one life good luck !! Have a nice day!
+Public speaking is very easy.
+Phase 1 defused. How about the next one?
+1 2 6 24 120 720
+That's number 2.  Keep going!
+1 b 214
+Halfway there!
+9
+So you got that one.  Try this one.
+opekmq
+Good work!  On to the next...
+4 2 6 3 1 5
+Congratulations! You've defused the bomb!
 ```
+Diffusing stages of bomb are the password for thor user is `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. 
+
+But according to a [stackoverflow thread](https://stackoverflow.com/c/42network/questions/664), these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
