@@ -80,3 +80,31 @@ void phase_5(char *str)
 	if (strcmp(str, "giants"))
 		explode_bomb();
 }
+
+void phase_6(char *str)
+{
+	int tab[6] = {253, 725, 301, 997, 212, 432};
+	int input[6];
+	int sorted[6];
+
+	read_six_numbers(str, input);
+
+	for (int i = 0; i != 6; ++i) {
+		// check if all numbers are below or equal to 6
+		if (input[i] > 6)
+			explode_bomb();
+		// check if all numbers are distinct
+		for (int j = 0; j != i; ++j) {
+			if (input[i] == input[j])
+				explode_bomb();
+		}
+		// sort array based on input[6]
+		sorted[i] = tab[input[i]-1];
+	}
+
+	// check if array is in descending order
+	for (int i = 0; i != 5; ++i) {
+		if (sorted[i] < sorted[i+1])
+			explode_bomb();
+	}
+}

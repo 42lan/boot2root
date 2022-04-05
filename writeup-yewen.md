@@ -164,7 +164,12 @@ Since our input is used to be AND(&) with 0xf, we just need to find possible cha
 ### Phase 6. Sorting numbers
 
 ```
-laurie@BornToSecHackMe:~$ ./bomb
+laurie@BornToSecHackMe:~$ gdb -q bomb
+Reading symbols from /home/laurie/bomb...done.
+(gdb) break phase_6
+Breakpoint 1 at 0x8048da1
+(gdb) run
+Starting program: /home/laurie/bomb
 Welcome this is my little bomb !!!! You have 6 stages with
 only one life good luck !! Have a nice day!
 Public speaking is very easy.
@@ -177,10 +182,48 @@ Halfway there!
 So you got that one.  Try this one.
 opekmq
 Good work!  On to the next...
+1 1 1 1 1 1
+
+Breakpoint 1, 0x08048da1 in phase_6 ()
+(gdb) print node1
+$1 = 253
+(gdb) print node2
+$2 = 725
+(gdb) print node3
+$3 = 301
+(gdb) print node4
+$4 = 997
+(gdb) print node5
+$5 = 212
+(gdb) print node6
+$6 = 432
+```
+```
+997  725  432  301  253  212
+ 4    2    6    3    1    5
+```
+Phase 6 sorts an int array based on our input and check if it's sorted. We have a hint from README file, so first number is 4. Since the 4th number is the biggest one, we tried to sort the array in descending order.
+
+```
+laurie@BornToSecHackMe:~$ cat bomb.txt
+Public speaking is very easy.
+1 2 6 24 120 720
+1 b 214
+9
+opekmq
 4 2 6 3 1 5
+
+laurie@BornToSecHackMe:~$ ./bomb < bomb.txt
+Welcome this is my little bomb !!!! You have 6 stages with
+only one life good luck !! Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+Good work!  On to the next...
 Congratulations! You've defused the bomb!
 ```
-Now we have the password for thor `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. According to a [stackoverflow thread](https://stackoverflow.com/c/42network/questions/664), these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
+Now we have the password for thor `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. According to a [stackoverflow thread](https://stackoverflow.com/c/42network/questions/664), there is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
 
 ## ssh thor
 Login with `thor:Publicspeakingisveryeasy.126241207201b2149opekmq426135`
