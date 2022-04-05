@@ -362,3 +362,58 @@ Congratulations! You've defused the bomb!
 Diffusing stages of bomb are the password for thor user is `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. 
 
 But according to a [stackoverflow thread](https://stackoverflow.com/c/42network/questions/664), these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
+
+# SSH thor
+Two text files are located in the home directory of thor user. 
+```shell
+┌──(kali㉿kali)-[~]
+└─$ ssh thor@192.168.56.103
+        ____                _______    _____           
+       |  _ \              |__   __|  / ____|          
+       | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
+       |  _ < / _ \| '__| '_ \| |/ _ \\___ \ / _ \/ __|
+       | |_) | (_) | |  | | | | | (_) |___) |  __/ (__ 
+       |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
+
+                       Good luck & Have fun
+thor@192.168.56.103's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
+thor@BornToSecHackMe:~$ ls
+README  turtle
+thor@BornToSecHackMe:~$ file *
+README: ASCII text
+turtle: ASCII text
+thor@BornToSecHackMe:~$ cat README 
+Finish this challenge and use the result as password for 'zaz' user.
+```
+Filename `turtle` is a hint refering to Python library called [turtle](https://docs.python.org/3/library/turtle.html).
+As it run graphic window, copy the file outside the VM. 
+```shell
+kali@kali:~$ scp thor@192.168.56.103:~/turtle .
+        ____                _______    _____           
+       |  _ \              |__   __|  / ____|          
+       | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
+       |  _ < / _ \| '__| '_ \| |/ _ \\___ \ / _ \/ __|
+       | |_) | (_) | |  | | | | | (_) |___) |  __/ (__ 
+       |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
+
+                       Good luck & Have fun
+thor@192.168.56.103's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
+turtle                                                                             100%   31KB   7.8MB/s   00:00 
+```
+Translating instruction lines into turtle methods result in a valid script that can be runned
+```shell
+┌──(kali㉿kali)-[~]
+└─$ sed -i -E "s/Avance (.*) spaces/fd(\1)/g;s/Recule (.*) spaces/bk(\1)/g;s/Tourne droite de (.*) degrees/rt(\1)/g;s/Tourne gauche de (.*) degrees/lt(\1)/g;s/Can/# Can/g;1s/^/from turtle import *\n\n/" turtle; echo "done()" >> turtle
+```
+Once, the script is runned a turtle shape letters "SLASH".
+<details>
+<summary>Turtle output</summary>
+
+<img width="849" alt="Screen Shot 2022-04-05 at 17 10 24" src="https://user-images.githubusercontent.com/22397481/161786071-90ecdd4e-d025-468f-8a3d-21d353356f5c.png">
+</details>
+
+The password is MD5 hash of SLASH.
+```shell
+kali@kali:~$ echo -n SLASH | md5sum
+646da671ca01bb5d84dbb5fb2238dc8e  -
+```
