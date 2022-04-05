@@ -71,12 +71,12 @@ void phase_4(char *str)
 
 void phase_5(char *str)
 {
-	char *s = "isrveawhobpnutfg";
+	char *charset = "isrveawhobpnutfg";
 
 	if (strlen(str) != 6)
 		explode_bomb();
 	for (int i = 0; i != 6; ++i)
-		str[i] = s[str[i] & 0xf];
+		str[i] = charset[str[i] & 0xf];
 	if (strcmp(str, "giants"))
 		explode_bomb();
 }

@@ -124,7 +124,7 @@ For third phase, our input format must be `int char int`. According to the hint 
 
 ### Phase 4. Fibonacci
 
-```
+```c
 int func4(int n)
 {
 	int ret;
@@ -137,6 +137,29 @@ int func4(int n)
 Fourth phase calls `func4` to take our input number N as index then compares Nth fibonacci number with `55`. Since index starts from 0, we input index `9` to get 55.
 
 ### Phase 5. Magic cipher
+
+```c
+char *charset = "isrveawhobpnutfg";
+
+if (strlen(str) != 6)
+	explode_bomb();
+for (int i = 0; i != 6; ++i)
+	str[i] = charset[str[i] & 0xf];
+if (strcmp(str, "giants"))
+	explode_bomb();
+```
+This phase bitwise AND (&) each character of the input string `str[i]` with `0xf`. The result is used as index of charset `isrveawhobpnutfg` to create a new string. Then the program compares new string with `giants`.
+
+```
+char     index     possible lowercase characters
+ g        0xf                0x6f(o)
+ i        0x0                0x70(p)
+ a        0x5            0x65(e) 0x75(u)
+ n        0xb                0x6b(k)
+ t        0xd                0x6d(m)
+ s        0x1            0x61(a) 0x71(q)
+```
+Since our input is used to be AND(&) with 0xf, we just need to find possible characters whose last 4 bytes match index of charset `isrveawhobpnutfg`. We have 4 possible strings `opekma opekmq opukma opukmq`. After trying them all, `opekmq` is the answer.
 
 ### Phase 6. Sorting numbers
 
