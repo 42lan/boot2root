@@ -51,7 +51,9 @@ $ printf 'Iheartpwnage' | shasum -a 256
 ```
 
 ## ssh laurie
+
 Login with `laurie:330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4`.
+
 ```
 laurie@BornToSecHackMe:~$ cat README
 Diffuse this bomb!
@@ -67,6 +69,64 @@ o
 
 NO SPACE IN THE PASSWORD (password is case sensitive).
 ```
+Here we must defuse the bomb to get all the password. The bomb has 6 phases for us to conquer.
+
+### Phase 1. String compare
+
+```
+laurie@BornToSecHackMe:~$ gdb -batch -ex "set disassembly-flavor intel" -ex "disassemble phase_1" bomb
+[...]
+   0x08048b32 <+18>:	call   0x8049030 <strings_not_equal>
+   0x08048b37 <+23>:	add    esp,0x10
+   0x08048b3a <+26>:	test   eax,eax
+   0x08048b3c <+28>:	je     0x8048b43 <phase_1+35>
+   0x08048b3e <+30>:	call   0x80494fc <explode_bomb>
+   0x08048b43 <+35>:	mov    esp,ebp
+[...]
+```
+First phase is pretty straightforward, the program calls `strings_not_equal` to compare our input with string literal `Public speaking is very easy.`.
+
+### Phase 2. Factorial
+
+```c
+int n[6];
+
+if (n[0] != 1)
+	explode_bomb();
+for (int i = 1; i != 6; ++i)
+	if (n[i] != (i + 1) * n[i - 1])
+		explode_bomb();
+```
+```
+1! = 1
+2! = 2 * 1 = 2
+3! = 3 * 2 = 6
+4! = 4 * 6 = 24
+5! = 5 * 24 = 120
+6! = 6 * 120 = 720
+```
+By reverse engineering the program, we knew that second phase is about factorial. What we need to do is input first 6 numbers of the factorial sequence starting from 1.
+
+### Phase 3. Case combination
+
+```c
+if (sscanf(str, "%d %c %d", &a, &b, &c) < 3)
+	explode_bomb();
+switch (a) {
+/* ... */
+case 1:
+	ref = 'b';
+	if (c != 214) // 0x08048c02 <+106>: cmp DWORD PTR [ebp-0x4],0xd6
+		explode_bomb();
+	break;
+```
+For third phase, our input format must be `int char int`. According to the hint of README file, the matching character is `b`. Then case 1 is our input combination `1 b 214`.
+
+### Phase 4. Fibonacci
+
+### Phase 5. Magic cipher
+
+### Phase 6. Sorting numbers
 
 ```
 laurie@BornToSecHackMe:~$ ./bomb
