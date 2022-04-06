@@ -73,9 +73,11 @@ Here we must defuse the bomb to get all the password. The bomb has 6 phases for 
 
 ### Phase 1. String compare
 
-```
+```gdb
 laurie@BornToSecHackMe:~$ gdb -batch -ex "set disassembly-flavor intel" -ex "disassemble phase_1" bomb
 [...]
+   0x08048b2c <+12>:    push   0x80497c0
+   0x08048b31 <+17>:    push   eax
    0x08048b32 <+18>:	call   0x8049030 <strings_not_equal>
    0x08048b37 <+23>:	add    esp,0x10
    0x08048b3a <+26>:	test   eax,eax
