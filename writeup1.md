@@ -492,4 +492,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 uid=1005(zaz) gid=1005(zaz) euid=0(root) groups=0(root),1005(zaz)
 # whoami
 root
+# cat /root/README
+CONGRATULATIONS !!!!
+To be continued...
 ```
