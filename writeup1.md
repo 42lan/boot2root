@@ -1,3 +1,10 @@
+# IP Address Lookup
+
+After installing and launching the VM, we are asked for a password and the machine's ip address is not indicated. Using the Host Network Manager from VirtualBox we can setup a local network between all virtual machines and the host. We set a narrow DHCP IP pool so we can easily find out the IP address of the VM.
+![Screenshot 2022-04-07 at 21 08 46](https://user-images.githubusercontent.com/8331471/162279653-b9c308aa-b6e8-413a-839b-0477bb8041d2.png)
+![Screenshot 2022-04-07 at 21 15 02](https://user-images.githubusercontent.com/8331471/162279805-50742c55-bbed-4f6f-ae20-52a6a34d3cb8.png)
+
+
 # Nmap - discover open ports
 
 Once IP address is found, run a scan with  `-p-`, `-sV` and `-O` options to scan ports from 1 through 65535, enable service/version detection to determine what application is running and enable OS detection. Aggressive scan may be performed using option `-A`.
