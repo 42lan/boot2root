@@ -1,9 +1,12 @@
 # IP Address Lookup
 
-After installing and launching the VM, we are asked for a password and the machine's ip address is not indicated. Using the Host Network Manager from VirtualBox we can setup a local network between all virtual machines and the host. We set a narrow DHCP IP pool so we can easily find out the IP address of the VM.
-![Screenshot 2022-04-07 at 21 08 46](https://user-images.githubusercontent.com/8331471/162279653-b9c308aa-b6e8-413a-839b-0477bb8041d2.png)
-![Screenshot 2022-04-07 at 21 15 02](https://user-images.githubusercontent.com/8331471/162279805-50742c55-bbed-4f6f-ae20-52a6a34d3cb8.png)
-
+After installing and launching the VM, we are asked for a password and the machine's IP address is not indicated. </br>
+Using the **Host Network Manager** from VirtualBox we can setup a local network between all virtual machines and the host.</br>
+We set a narrow DHCP IP pool so we can easily find out the IP address of the VM.
+<div align="center">
+  <img height="400em;" src="https://user-images.githubusercontent.com/8331471/162279653-b9c308aa-b6e8-413a-839b-0477bb8041d2.png" />
+  <img height="400em;" src="https://user-images.githubusercontent.com/8331471/162279805-50742c55-bbed-4f6f-ae20-52a6a34d3cb8.png" />
+</div>
 
 # Nmap - discover open ports
 
@@ -285,9 +288,6 @@ Extract files from an archive
 ┌──(kali㉿kali)-[/tmp/b2r]
 └─$ tar -xf fun 
 ┌──(kali㉿kali)-[/tmp/b2r]
-└─$ ls          
-ft_fun  fun  README
-┌──(kali㉿kali)-[/tmp/b2r]
 └─$ ls -l ft_fun
 total 3028
 -rw-r----- 1 kali kali    26 Aug 13  2015 00M73.pcap
@@ -309,6 +309,7 @@ Now SHA-256 it and submit
 ```
 
 # SSH laurie - Diffusing the bomb
+Once logged into laurie, two file are located in home directory.
 ```shell
 ┌──(kali㉿kali)-[~]
 └─$ ssh laurie@192.168.56.101
@@ -326,10 +327,6 @@ Warning: Permanently added '192.168.56.101' (ECDSA) to the list of known hosts.
 
                        Good luck & Have fun
 laurie@192.168.56.101's password: 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
-laurie@BornToSecHackMe:~$ 
-```
-Once logged into laurie, two file are located in home directory.
-```shell
 laurie@BornToSecHackMe:~$ ls
 bomb  README
 laurie@BornToSecHackMe:~$ file *
@@ -567,14 +564,6 @@ Filename `turtle` is a hint refering to Python library called [turtle](https://d
 As it run graphic window, copy the file outside the VM. 
 ```shell
 kali@kali:~$ scp thor@192.168.56.101:~/turtle .
-        ____                _______    _____           
-       |  _ \              |__   __|  / ____|          
-       | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
-       |  _ < / _ \| '__| '_ \| |/ _ \\___ \ / _ \/ __|
-       | |_) | (_) | |  | | | | | (_) |___) |  __/ (__ 
-       |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
-
-                       Good luck & Have fun
 thor@192.168.56.101's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
 turtle                                                                             100%   31KB   7.8MB/s   00:00 
 ```
