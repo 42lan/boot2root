@@ -15,15 +15,6 @@ void phase_2(char *str)
 	for (int i = 1; i != 6; ++i)
 		if (n[i] != (i + 1) * n[i - 1])
 			explode_bomb();
-/*
-	1! = 1
-	2! = 2 * 1 = 2
-	3! = 3 * 2 = 6
-	4! = 4 * 6 = 24
-	5! = 5 * 24 = 120
-	6! = 6 * 120 = 720
-
-*/
 }
 
 void phase_3(char *str)
@@ -35,13 +26,27 @@ void phase_3(char *str)
 	if (sscanf(str, "%d %c %d", &a, &b, &c) < 3)
 		explode_bomb();
 	switch (a) {
-	/* ... */
+	case 0:
+		ref = 'q';
+		if (c != 777)
+			explode_bomb();
+		break;
 	case 1:
 		ref = 'b';
 		if (c != 214) // 0x08048c02 <+106>: cmp DWORD PTR [ebp-0x4],0xd6
 			explode_bomb();
 		break;
+	case 2:
+		ref = 'b';
+		if (c != 755)
+			explode_bomb();
+		break;
 	/* ... */
+	case 7:
+		ref = 'b';
+		if (c != 524)
+			explode_bomb();
+		break;
 	default:
 		ref = 'x';
 		explode_bomb();
