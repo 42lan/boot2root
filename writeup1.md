@@ -401,7 +401,7 @@ for (int i = 1; i != 6; ++i)
 <summary>Details...</summary>
 
 The format contains conversion specifiers `%d %c %d` which means that the input format must be `int char int`. 
-According to the hint of README file, the matching character is `b`. Then, case 1 is the input combination `1 b 214`.
+According to the hint of README file, the matching character is `b`. Then, we can find 3 combinations `1 b 214`, `2 b 755` and `7 b 524`. All of them can defuse the bomb phase 3, so we need try them with SSH thor.
 ```c
 if (sscanf(str, "%d %c %d", &a, &b, &c) < 3)
 	explode_bomb();
@@ -410,6 +410,17 @@ switch (a) {
 case 1:
 	ref = 'b';
 	if (c != 214) // 0x08048c02 <+106>: cmp DWORD PTR [ebp-0x4],0xd6
+		explode_bomb();
+	break;
+case 2:
+	ref = 'b';
+	if (c != 755)
+		explode_bomb();
+	break;
+/* ... */
+case 7:
+	ref = 'b';
+	if (c != 524)
 		explode_bomb();
 	break;
 ```
