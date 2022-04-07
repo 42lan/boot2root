@@ -349,6 +349,7 @@ The challenge is to defuse the bomb composed of 6 phases to get all the password
 <details>
 <summary>Details...</summary>
 
+First phase is pretty straightforward, the program calls `strings_not_equal` to compare user input with string literal `Public speaking is very easy.`.
 ```gdb
 laurie@BornToSecHackMe:~$ gdb -batch -ex "set disassembly-flavor intel" -ex "disassemble phase_1" bomb
 [...]
@@ -362,13 +363,13 @@ laurie@BornToSecHackMe:~$ gdb -batch -ex "set disassembly-flavor intel" -ex "dis
    0x08048b43 <+35>:	mov    esp,ebp
 [...]
 ```
-First phase is pretty straightforward, the program calls `strings_not_equal` to compare our input with string literal `Public speaking is very easy.`.
 </details>
 
 ## Phase 2. Factorial
 <details>
 <summary>Details...</summary>
 
+By reverse engineering the program, the second phase is about factorial. The input must be first six numbers of the factorial sequence starting from 1.
 ```c
 int n[6];
 
@@ -386,14 +387,14 @@ for (int i = 1; i != 6; ++i)
 5! = 5 * 24 = 120
 6! = 6 * 120 = 720
 ```
-By reverse engineering the program, we knew that second phase is about factorial. What we need to do is input first 6 numbers of the factorial sequence starting from 1.
 </details>
-
 
 ## Phase 3. Case combination
 <details>
 <summary>Details...</summary>
 
+The format contains conversion specifiers `%d %c %d` which means that the input format must be `int char int`. 
+According to the hint of README file, the matching character is `b`. Then, case 1 is the input combination `1 b 214`.
 ```c
 if (sscanf(str, "%d %c %d", &a, &b, &c) < 3)
 	explode_bomb();
@@ -405,13 +406,13 @@ case 1:
 		explode_bomb();
 	break;
 ```
-For third phase, our input format must be `int char int`. According to the hint of README file, the matching character is `b`. Then case 1 is our input combination `1 b 214`.
 </details>
 
 ## Phase 4. Fibonacci
 <details>
 <summary>Details...</summary>
 
+Fourth phase calls `func4()` to take user input number N as index then compares Nth fibonacci number with 55. Since index starts from 0, the input index need to be `9` to get 55.
 ```c
 int func4(int n)
 {
@@ -422,13 +423,13 @@ int func4(int n)
 	return func4(n - 2) + func4(n - 1);
 }
 ```
-Fourth phase calls `func4` to take our input number N as index then compares Nth fibonacci number with `55`. Since index starts from 0, we input index `9` to get 55.
 </details>
 
 ## Phase 5. Magic cipher
 <details>
 <summary>Details...</summary>
 
+On this phase bitwise AND(&) each character of the user input string `str[i]` with `0xf`. The result is used as index of charset `isrveawhobpnutfg` to create a new string. Then the program compares new string with `giants`.
 ```c
 char *charset = "isrveawhobpnutfg";
 
@@ -439,7 +440,6 @@ for (int i = 0; i != 6; ++i)
 if (strcmp(str, "giants"))
 	explode_bomb();
 ```
-This phase bitwise AND (&) each character of the input string `str[i]` with `0xf`. The result is used as index of charset `isrveawhobpnutfg` to create a new string. Then the program compares new string with `giants`.
 
 ```
 char     index     possible lowercase characters
@@ -450,13 +450,15 @@ char     index     possible lowercase characters
  t        0xd                0x6d(m)
  s        0x1            0x61(a) 0x71(q)
 ```
-Since our input is used to be AND(&) with 0xf, we just need to find possible characters whose last 4 bytes match index of charset `isrveawhobpnutfg`. We have 4 possible strings `opekma opekmq opukma opukmq`. After trying them all, `opekmq` is the answer.
+Since the input is used to be AND(&) with `0xf`, we just need to find possible characters whose last 4 bytes match index of charset `isrveawhobpnutfg`.
+Four possible strings are `opekma`, `opekmq`, `opukma` and `opukmq`. After trying them all, `opekmq` is the answer.
 </details>
 
 ## Phase 6. Sorting numbers
 <details>
 <summary>Details...</summary>
 
+Phase 6 sorts an int array based on user input and check if it's sorted. From hint part of README file, the first number is 4. Since the 4th number is the biggest one, the array is sorted in descending order.
 ```gdb
 laurie@BornToSecHackMe:~$ gdb -q bomb
 Reading symbols from /home/laurie/bomb...done.
@@ -496,7 +498,6 @@ $6 = 432
 997  725  432  301  253  212
  4    2    6    3    1    5
 ```
-Phase 6 sorts an int array based on our input and check if it's sorted. We have a hint from README file, so first number is 4. Since the 4th number is the biggest one, we tried to sort the array in descending order.
 </details>
 
 Diffusing stages of bomb are the password for thor user is `Publicspeakingisveryeasy.126241207201b2149opekmq426315`. 
