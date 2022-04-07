@@ -1,7 +1,7 @@
 # Dirty COW
 
 ```shell
-$ ssh laurie@$VMIP
+$ ssh laurie@192.168.56.101
         ____                _______    _____
        |  _ \              |__   __|  / ____|
        | |_) | ___  _ __ _ __ | | ___| (___   ___  ___
@@ -10,7 +10,7 @@ $ ssh laurie@$VMIP
        |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
 
                        Good luck & Have fun
-laurie@192.168.60.10's password:
+laurie@192.168.56.101's password:
 laurie@BornToSecHackMe:~$
 ```
 Since we can login with a normal user `laurie` after exploiting FTP, from this point we can execute a Dirty COW attack. 

@@ -6,10 +6,10 @@ Once IP address is found, run a scan with  `-p-`, `-sV` and `-O` options to scan
 
 ```shell
 ┌──$ [~/42/2022/boot2root]
-└─>  sudo nmap -p- -sV -O 192.168.0.21
+└─>  sudo nmap -p- -sV -O 192.168.56.101
 Password: ******************
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-03-15 09:55 EDT
-Nmap scan report for 192.168.0.21
+Nmap scan report for 192.168.56.101
 Host is up (0.00048s latency).
 Not shown: 65529 closed tcp ports (reset)
 PORT    STATE SERVICE  VERSION
@@ -47,7 +47,7 @@ Run **dirb** on port 80 reveal that only `index.html` and `fonts/` are accessibl
 
 ```shell
 ┌──(kali㉿kali)-[~]
-└─$ dirb http://192.168.0.21
+└─$ dirb http://192.168.56.101
 
 -----------------
 DIRB v2.22
@@ -55,21 +55,21 @@ By The Dark Raver
 -----------------
 
 START_TIME: Tue Mar 15 10:28:02 2022
-URL_BASE: http://192.168.0.21/
+URL_BASE: http://192.168.56.101/
 WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
 
 -----------------
 
 GENERATED WORDS: 4612
 
----- Scanning URL: http://192.168.0.21/ ----
-+ http://192.168.0.21/cgi-bin/ (CODE:403|SIZE:288)
-==> DIRECTORY: http://192.168.0.21/fonts/
-+ http://192.168.0.21/forum (CODE:403|SIZE:285)
-+ http://192.168.0.21/index.html (CODE:200|SIZE:1025)
-+ http://192.168.0.21/server-status (CODE:403|SIZE:293)
+---- Scanning URL: http://192.168.56.101/ ----
++ http://192.168.56.101/cgi-bin/ (CODE:403|SIZE:288)
+==> DIRECTORY: http://192.168.56.101/fonts/
++ http://192.168.56.101/forum (CODE:403|SIZE:285)
++ http://192.168.56.101/index.html (CODE:200|SIZE:1025)
++ http://192.168.56.101/server-status (CODE:403|SIZE:293)
 
----- Entering directory: http://192.168.0.21/fonts/ ----
+---- Entering directory: http://192.168.56.101/fonts/ ----
 (!) WARNING: Directory IS LISTABLE. No need to scan it.
     (Use mode '-w' if you want to scan it anyway)
 
@@ -86,7 +86,7 @@ Running same scan, with `-r` option, on HTTPS port 443, reveal `forum`, `phpmyad
 
 ```shell
 ┌──(kali㉿kali)-[~]
-└─$ dirb https://192.168.0.21:443 /usr/share/dirb/wordlists/common.txt -r
+└─$ dirb https://192.168.56.101:443 /usr/share/dirb/wordlists/common.txt -r
 
 -----------------
 DIRB v2.22
@@ -94,7 +94,7 @@ By The Dark Raver
 -----------------
 
 START_TIME: Tue Mar 15 10:35:54 2022
-URL_BASE: https://192.168.0.21:443/
+URL_BASE: https://192.168.56.101:443/
 WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
 OPTION: Not Recursive
 
@@ -102,12 +102,12 @@ OPTION: Not Recursive
 
 GENERATED WORDS: 4612
 
----- Scanning URL: https://192.168.0.21:443/ ----
-+ https://192.168.0.21:443/cgi-bin/ (CODE:403|SIZE:289)
-==> DIRECTORY: https://192.168.0.21:443/forum/
-==> DIRECTORY: https://192.168.0.21:443/phpmyadmin/
-+ https://192.168.0.21:443/server-status (CODE:403|SIZE:294)
-==> DIRECTORY: https://192.168.0.21:443/webmail/
+---- Scanning URL: https://192.168.56.101:443/ ----
++ https://192.168.56.101:443/cgi-bin/ (CODE:403|SIZE:289)
+==> DIRECTORY: https://192.168.56.101:443/forum/
+==> DIRECTORY: https://192.168.56.101:443/phpmyadmin/
++ https://192.168.56.101:443/server-status (CODE:403|SIZE:294)
+==> DIRECTORY: https://192.168.56.101:443/webmail/
 
 -----------------
 END_TIME: Tue Mar 15 10:36:13 2022
@@ -117,11 +117,11 @@ DOWNLOADED: 4612 - FOUND: 2
 
 
 # Explore the forum
-The forum on https://192.168.0.21:443/forum/, is claming in the title *HackMe*.
+The forum on https://192.168.56.101:443/forum/, is claming in the title *HackMe*.
 
 First, there is no way to create a new user, only to log in with existing one: `admin`, `lmezard`, `qudevide`, `thor`, `wandre` and `zaz`.
 
-A post [Probleme login ?](https://192.168.0.21/forum/index.php?id=6) contains extract of `auth.log` file. `/var/log/auth.log` keeps authentication logs for successful or failed logins, and authentication processes.
+A post [Probleme login ?](https://192.168.56.101/forum/index.php?id=6) contains extract of `auth.log` file. `/var/log/auth.log` keeps authentication logs for successful or failed logins, and authentication processes.
 
 Copy this log into a file and sort by users which tried to authentificate.
 ```shell
@@ -155,18 +155,18 @@ session opened for user root by admin(uid=1000)
 ```
 It seems clearly that user which tried to authentificate misstyped password instead of username `!q\]Ej?*5K5cy*AJ`. As succesefuly authenticated users are determined, try to log in forum under of one of those users.
 
-The password allowed to authentificate on the [forum](https://192.168.0.21/forum) as `lmezard` user, but not on [webmail](https://192.168.0.21/webmail) and [phpmyadmin](https://192.168.0.21/phpmyadmin/).
+The password allowed to authentificate on the [forum](https://192.168.56.101/forum) as `lmezard` user, but not on [webmail](https://192.168.56.101/webmail) and [phpmyadmin](https://192.168.56.101/phpmyadmin/).
 
-On [Edit Profile](https://192.168.0.21/forum/index.php?mode=user&action=edit_profile) page the email of profile is `laurie@borntosec.net`.
+On [Edit Profile](https://192.168.56.101/forum/index.php?mode=user&action=edit_profile) page the email of profile is `laurie@borntosec.net`.
 
 # Webmail
-Using the initial password `!q\]Ej?*5K5cy*AJ` and the `laurie@borntosec.net` allow to connect [webmail](https://192.168.0.21/webmail).
+Using the initial password `!q\]Ej?*5K5cy*AJ` and the `laurie@borntosec.net` allow to connect [webmail](https://192.168.56.101/webmail).
 
-An email from `qudevide@mail.borntosec.net` contains credentials `root/Fg-'kKXBj87E:aJ$` to access DB [phpmyadmin](https://192.168.0.21/phpmyadmin/).
+An email from `qudevide@mail.borntosec.net` contains credentials `root/Fg-'kKXBj87E:aJ$` to access DB [phpmyadmin](https://192.168.56.101/phpmyadmin/).
 
 # phpMyAdmin - injection of web shell
 
-Once logedd into [phpmyadmin](https://192.168.0.21/phpmyadmin/) a [webshell](https://en.wikipedia.org/wiki/Web_shell) can be injected using `OUTFILE` statement. But it requires to find a writtable directory of Apache web server where the webshell can be put in. To do so, **dirb** can be runned on [https://192.168.0.21/forum](https://192.168.0.21/forum).
+Once logedd into [phpmyadmin](https://192.168.56.101/phpmyadmin/) a [webshell](https://en.wikipedia.org/wiki/Web_shell) can be injected using `OUTFILE` statement. But it requires to find a writtable directory of Apache web server where the webshell can be put in. To do so, **dirb** can be runned on [https://192.168.56.101/forum](https://192.168.56.101/forum).
 <details>
 <summary>Output of dirb</summary>
 
@@ -304,12 +304,12 @@ Now SHA-256 it and submit
 # SSH laurie - Diffusing the bomb
 ```shell
 ┌──(kali㉿kali)-[~]
-└─$ ssh laurie@192.168.56.103
-The authenticity of host '192.168.56.103 (192.168.56.103)' can't be established.
+└─$ ssh laurie@192.168.56.101
+The authenticity of host '192.168.56.101 (192.168.56.101)' can't be established.
 ECDSA key fingerprint is SHA256:d5T03f+nYmKY3NWZAinFBqIMEK1U0if222A1JeR8lYE.
 This key is not known by any other names
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '192.168.56.103' (ECDSA) to the list of known hosts.
+Warning: Permanently added '192.168.56.101' (ECDSA) to the list of known hosts.
         ____                _______    _____           
        |  _ \              |__   __|  / ____|          
        | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
@@ -318,7 +318,7 @@ Warning: Permanently added '192.168.56.103' (ECDSA) to the list of known hosts.
        |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
 
                        Good luck & Have fun
-laurie@192.168.56.103's password: 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
+laurie@192.168.56.101's password: 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
 laurie@BornToSecHackMe:~$ 
 ```
 Once logged into laurie, two file are located in home directory.
@@ -527,7 +527,7 @@ But according to a [stackoverflow thread](https://stackoverflow.com/c/42network/
 Two text files are located in the home directory of thor user. 
 ```shell
 ┌──(kali㉿kali)-[~]
-└─$ ssh thor@192.168.56.103
+└─$ ssh thor@192.168.56.101
         ____                _______    _____           
        |  _ \              |__   __|  / ____|          
        | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
@@ -536,7 +536,7 @@ Two text files are located in the home directory of thor user.
        |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
 
                        Good luck & Have fun
-thor@192.168.56.103's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
+thor@192.168.56.101's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
 thor@BornToSecHackMe:~$ ls
 README  turtle
 thor@BornToSecHackMe:~$ file *
@@ -548,7 +548,7 @@ Finish this challenge and use the result as password for 'zaz' user.
 Filename `turtle` is a hint refering to Python library called [turtle](https://docs.python.org/3/library/turtle.html).
 As it run graphic window, copy the file outside the VM. 
 ```shell
-kali@kali:~$ scp thor@192.168.56.103:~/turtle .
+kali@kali:~$ scp thor@192.168.56.101:~/turtle .
         ____                _______    _____           
        |  _ \              |__   __|  / ____|          
        | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
@@ -557,7 +557,7 @@ kali@kali:~$ scp thor@192.168.56.103:~/turtle .
        |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
 
                        Good luck & Have fun
-thor@192.168.56.103's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
+thor@192.168.56.101's password: Publicspeakingisveryeasy.126241207201b2149opekmq426135
 turtle                                                                             100%   31KB   7.8MB/s   00:00 
 ```
 Translating instruction lines into turtle methods result in a valid script that can be runned
@@ -581,7 +581,7 @@ kali@kali:~$ echo -n SLASH | md5sum
 # SSH zaz - BOF/ret2libc
 A SUID executable owned by root is located in zaz's home directory.
 ```shell
-kali@kali:~$ ssh zaz@192.168.56.103
+kali@kali:~$ ssh zaz@192.168.56.101
         ____                _______    _____           
        |  _ \              |__   __|  / ____|          
        | |_) | ___  _ __ _ __ | | ___| (___   ___  ___ 
@@ -590,7 +590,7 @@ kali@kali:~$ ssh zaz@192.168.56.103
        |____/ \___/|_|  |_| |_|_|\___/_____/ \___|\___|
 
                        Good luck & Have fun
-zaz@192.168.56.103's password: 646da671ca01bb5d84dbb5fb2238dc8e
+zaz@192.168.56.101's password: 646da671ca01bb5d84dbb5fb2238dc8e
 zaz@BornToSecHackMe:~$ id
 uid=1005(zaz) gid=1005(zaz) groups=1005(zaz)
 zaz@BornToSecHackMe:~$ ls -l
