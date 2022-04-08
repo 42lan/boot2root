@@ -13,7 +13,7 @@ $ ssh laurie@192.168.56.101
 laurie@192.168.56.101's password: 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
 laurie@BornToSecHackMe:~$
 ```
-Since we can login with a normal user `laurie` [after exploiting FTP](https://github.com/4slan/boot2root/blob/main/writeup1.md#ssh-laurie---diffusing-the-bomb), from this point we can execute a [Dirty COW attack](https://github.com/FireFart/dirtycow/blob/master/dirty.c). 
+Since we can login with a normal user `laurie` [after exploiting FTP](https://github.com/4slan/boot2root/blob/main/writeup1.md#ssh-laurie---diffusing-the-bomb), from this point we can execute a [Dirty COW attack](https://raw.githubusercontent.com/firefart/dirtycow/master/dirty.c). 
 
 This vulnerability has CVE identifier [CVE-2016-5195](https://cve.mitre.org/cgi-bin/cvename.cgi?name=cve-2016-5195).
 
