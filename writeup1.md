@@ -44,7 +44,7 @@ Nmap done: 1 IP address (1 host up) scanned in 21.01 seconds
 
 
 
-The scan reveals that a few serices are running and their corresponding ports.
+The scan reveals that a few services are running and their corresponding ports.
 
 # Dirb - path traversal
 A [path traversal attack](https://owasp.org/www-community/attacks/Path_Traversal) can be performed on HTTP and HTTPS ports using **dirb**.
@@ -385,11 +385,11 @@ for (int i = 1; i != 6; ++i)
 ```
 ```
 1! = 1
-2! = 2 * 1 = 2
-3! = 3 * 2 = 6
-4! = 4 * 6 = 24
-5! = 5 * 24 = 120
-6! = 6 * 120 = 720
+2! = 1 * 2 = 2
+3! = 1 * 2 * 3 = 6
+4! = 1 * 2 * 3 * 4 = 24
+5! = 1 * 2 * 3 * 4 * 5 = 120
+6! = 1 * 2 * 3 * 4 * 5 * 6 = 720
 ```
 </details>
 
@@ -454,6 +454,12 @@ for (int i = 0; i != 6; ++i)
 	str[i] = charset[str[i] & 0xf];
 if (strcmp(str, "giants"))
 	explode_bomb();
+```
+
+```
+For example we input a character 'e' (0x65)
+0x65 & 0xf => 0x5
+charset[0x5] => 'a'
 ```
 
 ```
@@ -642,7 +648,7 @@ Stack level 0, frame at 0xbffff760:
  Locals at 0xbffff758, Previous frame's sp is 0xbffff760
  Saved registers:
   ebp at 0xbffff758, eip at 0xbffff75c
-(gdb) print 0xbffff75c - 0xbffff6d0
+(gdb) print 0xbffff75c - 0xbffff6d0 // return address $eip - buffer address $eax
 $1 = 140
 ```
 The second step is to find addresse of `system()`, `exit()` functions and the pointer to the string "/bin/sh".
